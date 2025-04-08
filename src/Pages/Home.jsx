@@ -14,14 +14,20 @@ import Wind from './../assets/wind.png'
 
 const Home = () => {
     const [cityname, setCityName] = useState('');
-    const [data, setData] = useState([])
-    const [show, setShow] = useState(false)
-    const [weatherIcon, setWeatherIcon] = useState(Clear)
-    const [temp, setTemop] = useState()
+    const [data, setData] = useState([]);
+    const [show, setShow] = useState(false);
+    const [weatherIcon, setWeatherIcon] = useState(Clear);
+    const [temp, setTemp] = useState();
+    const [humidity, setHumidity] = useState()
+    const [wind, setWind] = useState()
+
+
     let apiKey = "88c22151468d8609cbdce07b808891ff";
 
     function submitCityName(e) {
-        setCityName(' ')
+        if (cityname.trim()) {
+            setCityName('')
+        }
         fetchData();
         setShow(true)
     }
@@ -30,8 +36,9 @@ const Home = () => {
         try {
             const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityname}&appid=${apiKey}&units=metric`)
             const data = await response.json();
-            setTemop(data.main.temp)
-
+            setTemp(data.main.temp)
+            setHumidity(data.main.humidity)
+            setWind(data.wind.speed)
             setData(data)
 
             if (data.weather[0].main == "Clouds") {
@@ -77,14 +84,14 @@ const Home = () => {
                             <div className="col">
                                 <img src="images/humidity.png" alt="" className="icon" />
                                 <div>
-                                    <p className="humidity">50%</p>
+                                    <p className="humidity">{humidity}%</p>
                                     <p>Humidity</p>
                                 </div>
                             </div>
                             <div className="col">
                                 <img src="images/wind.png" alt="" />
                                 <div>
-                                    <p className="wind">15 km/h</p>
+                                    <p className="wind">{wind}km/h</p>
                                     <p>Wind Speed</p>
                                 </div>
                             </div>
